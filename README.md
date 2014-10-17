@@ -124,6 +124,7 @@ If a service does not have at least two providers, it is considered a *beta* int
   * [Rackspace](docs/providers/rackspace/loadbalancer.md)
 * **[Orchestration](#orchestration----beta)** *(beta)*
   * [Openstack](docs/providers/openstack/orchestration.md)
+  * [Rackspace](docs/providers/rackspace/orchestration.md)
 * **[Network](#network----beta)** *(beta)*
   * [HP](docs/providers/hp/network.md)
   * [Openstack](docs/providers/openstack/network.md)
@@ -210,7 +211,7 @@ Each instance of `pkgcloud.storage.Client` returned from `pkgcloud.storage.creat
 * `client.getContainer(containerName, function (err, container) { })`
 
 ### File
-* `client.upload(options, function (err) { })`
+* `client.upload(options)`
 * `client.download(options, function (err) { })`
 * `client.getFiles(container, function (err, files) { })`
 * `client.getFile(container, file, function (err, server) { })`
@@ -225,10 +226,21 @@ Both the `.upload(options)` and `.download(options)` have had **careful attentio
 
   var client = pkgcloud.storage.createClient({ /* ... */ });
 
-  fs.createReadStream('a-file.txt').pipe(client.upload({
+  var readStream = fs.createReadStream('a-file.txt');
+  var writeStream = client.upload({
     container: 'a-container',
     remote: 'remote-file-name.txt'
-  }));
+  });
+
+  writeStream.on('error', function(err) {
+    // handle your error case
+  });
+
+  writeStream.on('success', function(file) {
+    // success, file will be a File model
+  });
+
+  readStream.pipe(writeStream);
 ```
 
 ### Download a File
@@ -480,6 +492,7 @@ To get started with a `pkgcloud.orchestration` client just create one:
 #### Providers
 
 * [Openstack](docs/providers/openstack/orchestration.md)
+* [Rackspace](docs/providers/rackspace/orchestration.md)
 
 Each instance of `pkgcloud.orchestration.Client` returned from `pkgcloud.orchestration.createClient` has a set of uniform APIs:
 
