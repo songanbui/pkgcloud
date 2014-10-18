@@ -8,7 +8,7 @@ The Cloudstack provider in pkgcloud currently supports the following services:
 
 ### Authentication
 
-For all of the Openstack services, you create a client with the same options:
+For all of the Cloudstack services, you create a client with the same options:
 
 ```Javascript
 var client = require('pkgcloud').compute.createClient({
@@ -25,7 +25,7 @@ All of the Cloudstack `createClient` calls have a few options that can be provid
 
 `projectId` specifies which project of your Cloudstack platform to use
 
-##### Specifying a custom region
+##### Specifying a project
 
 ```Javascript
 var client = require('pkgcloud').compute.createClient({
