@@ -23,7 +23,7 @@ All of the Cloudstack `createClient` calls have a few options that can be provid
 
 #### Project ID
 
-`projectId` specifies which project of your Cloudstack platform to use
+`projectId` specifies which project of your Cloudstack account to use
 
 ##### Specifying a project
 
