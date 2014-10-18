@@ -17,7 +17,7 @@ var client = require('pkgcloud').compute.createClient({
 
 Several Cloudstack API methods are asynchronous and generates a job. Cloudstack provides a common method API to retrieve jobs, thus allowing to track the progress of any asynchronous methods.
 
-As such, the Cloudstack provider in pkgcloud is developed so that asynchronous methods can return continuously a job, then return the final result once the job is completed (standard callback). This is optionnally done by providing a progressCallback function, along the standard callback.
+As such, the Cloudstack provider in pkgcloud is developed so that asynchronous methods can return continuously a job, then return the final result once the job is completed. This is optionnally done by providing a progressCallback function, along the standard callback.
 
 Example: createServer (Cloudstack's deployVirtualMachine) returns continuously a job id. The job, once completed, contains all the server information from Cloudstack (i.e. not only the user-specified options).
 
