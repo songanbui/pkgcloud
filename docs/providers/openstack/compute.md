@@ -4,12 +4,14 @@ Creating a client is straight-forward:
 
 ``` js
   var openstack = pkgcloud.compute.createClient({
-    provider: 'openstack',
-    username: 'your-user-name',
-    password: 'your-password',
-    authUrl: 'https://your-identity-service'
+    provider: 'openstack', // required
+    username: 'your-user-name', // required
+    password: 'your-password', // required
+    authUrl: 'your identity service url' // required
   });
 ```
+
+**Note:** *Due to variances between OpenStack deployments, you may or may not need a `region` option.*
 
 [More options for creating clients](README.md)
 
@@ -76,7 +78,7 @@ Returns a list of all possible server flavors available in the callback `f(err,
 flavors)`
 
 #### client.getFlavor(flavor, callback)
-Returns the specified rackspace flavor of Openstack Images by ID or flavor
+Returns the specified flavor of Openstack Images by ID or flavor
 object in the callback `f(err, flavor)`
 
 **images**
@@ -114,7 +116,7 @@ Destroys the specified image and returns a confirmation
 
 ## Volume Attachments
 
-Attaching a volume to a compute instance requires using a rackspace compute client, as well as possessing a `volume` or `volumeId`. Detaching volumes behaves the same way.
+Attaching a volume to a compute instance requires using an openstack compute client, as well as possessing a `volume` or `volumeId`. Detaching volumes behaves the same way.
 
 #### client.getVolumeAttachments(server, callback)
 

@@ -10,13 +10,15 @@
 Creating a client is straight-forward:
 
 ``` js
-  var rackspace = pkgcloud.storage.createClient({
-    provider: 'openstack',
-    username: 'your-user-name',
-    password: 'your-password',
-    authUrl: 'https://your-identity-service'
+  var openstack = pkgcloud.storage.createClient({
+    provider: 'openstack', // required
+    username: 'your-user-name', // required
+    password: 'your-password', // required
+    authUrl: 'your identity service url' // required
   });
 ```
+
+**Note:** *Due to variances between OpenStack deployments, you may or may not need a `region` option.*
 
 Learn about [more options for creating clients](README.md) in the Openstack `storage` provider.
 
@@ -207,7 +209,7 @@ You need not provide either `stream` or `local`. `client.download` returns a rea
 var fs = require('fs'),
     pkgcloud = require('pkgcloud');
 
-var client = pkgcloud.providers.rackspace.storage.createClient({ ... });
+var client = pkgcloud.providers.openstack.storage.createClient({ ... });
 
 var myFile = fs.createWriteStream('/my/local/file');
 
@@ -224,7 +226,7 @@ You could also download to a local file via the `local` property on `options`:
 ```Javascript
 var pkgcloud = require('pkgcloud');
 
-var client = pkgcloud.providers.rackspace.storage.createClient({ ... });
+var client = pkgcloud.providers.openstack.storage.createClient({ ... });
 
 client.download({
     container: 'my-container',

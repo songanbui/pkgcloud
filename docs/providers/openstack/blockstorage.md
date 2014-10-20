@@ -1,19 +1,18 @@
-##Using the Rackspace Block Storage provider
+##Using the Openstack Block Storage provider
 
 #### BETA - This API may change as additional providers for block storage are added to pkgcloud
 
 Creating a block-storage client is straight-forward:
 
 ``` js
-  var rackspace = pkgcloud.blockstorage.createClient({
-    provider: 'rackspace', // required
+  var openstack = pkgcloud.blockstorage.createClient({
+    provider: 'openstack', // required
     username: 'your-user-name', // required
-    apiKey: 'your-api-key', // required
-    region: 'IAD', // required, regions can be found at
-    // http://www.rackspace.com/knowledge_center/article/about-regions
-    useInternal: false // optional, use to talk to serviceNet from a Rackspace machine
+    password: 'your-password', // required
+    authUrl: 'your identity service url' // required
   });
 ```
+**Note:** *Due to variances between OpenStack deployments, you may or may not need a `region` option.*
 
 [More options for creating clients](README.md)
 
@@ -78,7 +77,7 @@ A VolumeType for BlockStorage has the following properties:
 ### Volume APIs
 
 #### client.getVolumes(options, callback)
-Lists all volumes that are available to use on your Rackspace account
+Lists all volumes that are available to use on your Openstack account
 
 Callback returns `f(err, volumes)` where `volumes` is an `Array`. `options` is an optional `boolean` which will return the full volume details if true.
 
@@ -117,7 +116,7 @@ Returns callback with a confirmation
 ### Snapshot APIs
 
 #### client.getSnapshots(options, callback)
-Lists all snapshots that are available to use on your Rackspace account
+Lists all snapshots that are available to use on your Openstack account
 
 Callback returns `f(err, snapshots)` where `snapshots` is an `Array`. `options` is an optional `boolean` which will return the full snapshot details if true.
 
@@ -157,7 +156,7 @@ Returns callback with a confirmation
 Volume types are used to define which kind of new volume to create.
 
 #### client.getVolumeTypes(callback)
-Lists all volumeTypes that are available to use on your Rackspace account
+Lists all volumeTypes that are available to use on your Openstack account
 
 Callback returns `f(err, volumeTypes)` where `volumeTypes` is an `Array`.
 
