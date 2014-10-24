@@ -53,6 +53,7 @@ Options are as follows:
 }
 ```
 Returns a server object generated with specified options in the callback `f(err, server)`
+
 (A): Returns a server object generated with complete Cloudstack information in the callback `f(err, server)`
 
 #### client.destroyServer(server, callback, progressCallback)
@@ -62,6 +63,7 @@ _Asynchronous method_
 Destroys the specified server
 
 Takes server or serverId as an argument and returns the job in the callback `f(err, job)`
+
 (A): Takes server or serverId as an argument and returns the job in the progressCallback `f(err, job)` and a server generated with job results in the callback `f(err, server)`
 
 #### client.rebootServer(server, callback, progressCallback)
@@ -71,6 +73,7 @@ _Asynchronous method_
 Reboots the specifed server with options
 
 Takes server or serverId as an argument and returns the job in the callback `f(err, job)`
+
 (A): Takes server or serverId as an argument and returns the job in the progressCallback `f(err, job)` and a server generated with job results in the callback `f(err, server)`
 
 #### client.startServer(server, callback, progressCallback)
@@ -80,6 +83,7 @@ _Asynchronous method_
 Starts the specifed server with options
 
 Takes server or serverId as an argument and returns the job in the callback `f(err, job)`
+
 (A): Takes server or serverId as an argument and returns the job in the progressCallback `f(err, job)` and a server generated with job results in the callback `f(err, server)`
 
 #### client.stopServer(server, callback, progressCallback)
@@ -89,6 +93,7 @@ _Asynchronous method_
 Stops the specifed server with options
 
 Takes server or serverId as an argument and returns the job in the callback `f(err, job)`
+
 (A): Takes server or serverId as an argument and returns the job in the progressCallback `f(err, job)` and a server generated with job results in the callback `f(err, server)`
 
 
