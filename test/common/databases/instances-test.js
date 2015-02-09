@@ -14,6 +14,13 @@ var should = require('should'),
     Flavor = require('../../../lib/pkgcloud/core/compute/flavor').Flavor,
     Instance = require('../../../lib/pkgcloud/openstack/database/instance').Instance,
     mock = !!process.env.MOCK;
+
+// Declaring variables for helper functions defined later
+var assertLinks, setupCreateInstanceMock, setupGetInstancesMock,
+    setupGetDatabaseInstancesWithLimitMock, setupDestroyInstanceMock,
+    setGetInstanceMock, setGetFlavorsMock, setupSetFlavorMock, setupResizeMock,
+    setupGetOneFlavorMock, setupRestartInstanceMock;
+
 providers.filter(function (provider) {
   return !!helpers.pkgcloud.providers[provider].database && provider !== 'azure';
 }).forEach(function (provider) {
@@ -89,7 +96,7 @@ providers.filter(function (provider) {
       describe('the getInstances() method', function() {
         describe('without options', function() {
 
-          var err, instances, offset
+          var err, instances, offset;
 
           before(function(done) {
 
@@ -152,7 +159,7 @@ providers.filter(function (provider) {
 
         describe('with limit', function () {
 
-          var err, instances, offset
+          var err, instances, offset;
 
           before(function (done) {
 
@@ -230,12 +237,13 @@ providers.filter(function (provider) {
           if (mock) {
             hockInstance
               .get('/v1.0/123456/instances?marker=55041e91-98ab-4cd5-8148-f3b3978b3262')
-              .reply(200, helpers.loadFixture('rackspace/databaseInstanceOffset.json'))
+              .reply(200, helpers.loadFixture('rackspace/databaseInstanceOffset.json'));
           }
 
           client.getInstances({ offset: testContext.marker }, function (err, instances, offset) {
             should.not.exist(err);
             should.exist(instances);
+            should.not.exist(offset);
             instances.should.be.an.Array;
             should.ok(instances.length >= 2
               && instances.length < testContext.instancesQuantity);
@@ -253,7 +261,7 @@ providers.filter(function (provider) {
           if (mock) {
             hockInstance
               .get('/v1.0/123456/instances?limit=1&marker=55041e91-98ab-4cd5-8148-f3b3978b3262')
-              .reply(200, helpers.loadFixture('rackspace/databaseInstanceLimitOffset.json'))
+              .reply(200, helpers.loadFixture('rackspace/databaseInstanceLimitOffset.json'));
           }
 
           client.getInstances({limit: 1, offset: testContext.marker }, function (err, instances, offset) {
@@ -391,14 +399,14 @@ providers.filter(function (provider) {
           client.createInstance(function(err) {
             should.exist(err);
             done();
-          })
+          });
         });
 
         it('without flavor should respond with errors', function (done) {
           client.createInstance({ name: 'test-without-flavor' }, function (err) {
             should.exist(err);
             done();
-          })
+          });
         });
 
         it('with invalid size should respond with errors', function (done) {
@@ -425,7 +433,7 @@ providers.filter(function (provider) {
           client.restartInstance(function (err) {
             should.exist(err);
             done();
-          })
+          });
         });
 
         it('with valid instance should restart', function (done) {
@@ -455,21 +463,22 @@ providers.filter(function (provider) {
           function (next) {
             authServer.close(next);
           }
-        ], done)
+        ], done);
       });
     });
   });
 
 });
-function assertLinks(links) {
+
+assertLinks = function (links) {
   links.should.be.an.Array;
   links.forEach(function (link) {
     should.exist(link.href);
     should.exist(link.rel);
   });
-}
+};
 
-function setupCreateInstanceMock(hockInstance,  provider) {
+setupCreateInstanceMock = function (hockInstance,  provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/flavors/1')
@@ -518,69 +527,69 @@ function setupCreateInstanceMock(hockInstance,  provider) {
         })
         .reply(200, helpers.loadFixture('rackspace/createdDatabaseInstance.json'));
   }
-}
+};
 
-function setupGetInstancesMock(hockInstance, provider) {
+setupGetInstancesMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
-      .reply(200, helpers.loadFixture('rackspace/databaseInstances.json'))
+      .reply(200, helpers.loadFixture('rackspace/databaseInstances.json'));
   }
   else if (provider === 'openstack') {
     hockInstance
       .get('/v1.0/72e90ecb69c44d0296072ea39e537041/instances')
-      .reply(200, helpers.loadFixture('openstack/databaseInstances.json'))
+      .reply(200, helpers.loadFixture('openstack/databaseInstances.json'));
   }
   else if (provider === 'hp') {
     hockInstance
       .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances')
-      .reply(200, helpers.loadFixture('hp/databaseInstances.json'))
+      .reply(200, helpers.loadFixture('hp/databaseInstances.json'));
   }
-}
+};
 
-function setupGetDatabaseInstancesWithLimitMock(hockInstance, provider) {
+setupGetDatabaseInstancesWithLimitMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances?limit=2')
-      .reply(200, helpers.loadFixture('rackspace/databaseInstancesLimit2.json'))
+      .reply(200, helpers.loadFixture('rackspace/databaseInstancesLimit2.json'));
   }
   else if (provider === 'openstack') {
     hockInstance
       .get('/v1.0/72e90ecb69c44d0296072ea39e537041/instances?limit=2')
-      .reply(200, helpers.loadFixture('openstack/databaseInstancesLimit2.json'))
+      .reply(200, helpers.loadFixture('openstack/databaseInstancesLimit2.json'));
   }
   else if (provider === 'hp') {
     hockInstance
       .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances?limit=2')
-      .reply(200, helpers.loadFixture('hp/databaseInstancesLimit2.json'))
+      .reply(200, helpers.loadFixture('hp/databaseInstancesLimit2.json'));
   }
-}
+};
 
-function setupDestroyInstanceMock(hockInstance, provider) {
+setupDestroyInstanceMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
       .reply(200, helpers.loadFixture('rackspace/databaseInstances.json'))
       .delete('/v1.0/123456/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f')
-      .reply(202)
+      .reply(202);
   }
   else if (provider === 'openstack') {
     hockInstance
       .get('/v1.0/72e90ecb69c44d0296072ea39e537041/instances')
       .reply(200, helpers.loadFixture('openstack/databaseInstances.json'))
       .delete('/v1.0/72e90ecb69c44d0296072ea39e537041/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f')
-      .reply(202)
+      .reply(202);
   }
   else if (provider === 'hp') {
     hockInstance
       .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances')
       .reply(200, helpers.loadFixture('hp/databaseInstances.json'))
       .delete('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f')
-      .reply(202)
+      .reply(202);
   }
-}
+};
 
-function setGetInstanceMock(hockInstance, provider) {
+setGetInstanceMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
       hockInstance
         .get('/v1.0/123456/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f')
@@ -596,27 +605,27 @@ function setGetInstanceMock(hockInstance, provider) {
            .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f')
            .reply(200, helpers.loadFixture('hp/databaseInstance.json'));
   }
-}
+};
 
-function setGetFlavorsMock(hockInstance, provider) {
+setGetFlavorsMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
       hockInstance
         .get('/v1.0/123456/flavors/2')
-        .reply(200, helpers.loadFixture('rackspace/databaseFlavor2.json'))
+        .reply(200, helpers.loadFixture('rackspace/databaseFlavor2.json'));
   }
   else if (provider === 'openstack') {
       hockInstance
            .get('/v1.0/72e90ecb69c44d0296072ea39e537041/flavors/2')
-           .reply(200, helpers.loadFixture('openstack/databaseFlavor2.json'))
+           .reply(200, helpers.loadFixture('openstack/databaseFlavor2.json'));
   }
   else if (provider === 'hp') {
         hockInstance
            .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/flavors/2')
-           .reply(200, helpers.loadFixture('hp/databaseFlavor2.json'))
+           .reply(200, helpers.loadFixture('hp/databaseFlavor2.json'));
   }
-}
+};
 
-function setupSetFlavorMock(hockInstance, provider) {
+setupSetFlavorMock = function (hockInstance, provider) {
   if (provider ==='rackspace') {
       hockInstance
         .get('/v1.0/123456/instances')
@@ -656,9 +665,9 @@ function setupSetFlavorMock(hockInstance, provider) {
         })
         .reply(202);
   }
-}
+};
 
-function setupResizeMock (hockInstance, provider) {
+setupResizeMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -698,9 +707,9 @@ function setupResizeMock (hockInstance, provider) {
       })
       .reply(202);
   }
-}
+};
 
-function setupGetOneFlavorMock(hockInstance, provider) {
+setupGetOneFlavorMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
       hockInstance
         .get('/v1.0/123456/flavors/1')
@@ -716,28 +725,28 @@ function setupGetOneFlavorMock(hockInstance, provider) {
         .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/flavors/1')
         .reply(200, helpers.loadFixture('hp/databaseFlavor1.json'));
   }
-}
+};
 
-function setupRestartInstanceMock (hockInstance, provider) {
+setupRestartInstanceMock = function (hockInstance, provider) {
   if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
       .reply(200, helpers.loadFixture('rackspace/databaseInstances.json'))
       .post('/v1.0/123456/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/action', { restart :{}})
-      .reply(202)
+      .reply(202);
   }
   else if (provider === 'openstack') {
     hockInstance
       .get('/v1.0/72e90ecb69c44d0296072ea39e537041/instances')
       .reply(200, helpers.loadFixture('openstack/databaseInstances.json'))
       .post('/v1.0/72e90ecb69c44d0296072ea39e537041/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/action', { restart :{}})
-      .reply(202)
+      .reply(202);
   }
   else if (provider === 'hp') {
     hockInstance
       .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances')
       .reply(200, helpers.loadFixture('hp/databaseInstances.json'))
       .post('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/action', { restart :{}})
-      .reply(202)
+      .reply(202);
   }
-}
+};

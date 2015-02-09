@@ -13,6 +13,11 @@ var should = require('should'),
     providers = require('../../configs/providers.json'),
     mock = !!process.env.MOCK;
 
+// Declaring variables for helper functions defined later
+var setupCreateDatabasesMock, setupCreateDatabasesForPaginationMock,
+    setupModelCreateDatabasesMock, setupGetDatabasesMock,
+    setupDestroyDatabasesMock, setupDestroyLastDatabasesMock;
+
 providers.filter(function (provider) {
  return !!helpers.pkgcloud.providers[provider].database && provider !== 'azure';
 }).forEach(function (provider) {
@@ -143,7 +148,7 @@ providers.filter(function (provider) {
           client.getDatabases({ instance: instance }, function (err, list) {
             should.not.exist(err);
             should.exist(list);
-            should.exist(list[0])
+            should.exist(list[0]);
             list[0].name.should.equal('TestDatabase');
             list[0].name.should.be.a.String;
             hockInstance && hockInstance.done();
@@ -305,14 +310,14 @@ providers.filter(function (provider) {
           function (next) {
             authServer.close(next);
           }
-        ], done)
+        ], done);
       });
 
     });
   });
 });
 
-function setupCreateDatabasesMock(hockInstance, provider) {
+setupCreateDatabasesMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -349,9 +354,9 @@ function setupCreateDatabasesMock(hockInstance, provider) {
       })
       .reply(202);
   }
-}
+};
 
-function setupCreateDatabasesForPaginationMock(hockInstance, provider) {
+setupCreateDatabasesForPaginationMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -388,9 +393,9 @@ function setupCreateDatabasesForPaginationMock(hockInstance, provider) {
       })
       .reply(202);
   }
-}
+};
 
-function setupModelCreateDatabasesMock(hockInstance, provider) {
+setupModelCreateDatabasesMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -427,11 +432,9 @@ function setupModelCreateDatabasesMock(hockInstance, provider) {
       })
       .reply(202);
   }
-}
+};
 
-
-
-function setupGetDatabasesMock(hockInstance, provider) {
+setupGetDatabasesMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
         hockInstance
           .get('/v1.0/123456/instances')
@@ -453,9 +456,9 @@ function setupGetDatabasesMock(hockInstance, provider) {
           .get('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/databases')
           .reply(200, {databases: [{name: 'TestDatabase'}, {name: 'TestDatabaseTwo'}]});
   }
-}
+};
 
-function setupDestroyDatabasesMock(hockInstance, provider) {
+setupDestroyDatabasesMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -477,9 +480,9 @@ function setupDestroyDatabasesMock(hockInstance, provider) {
             .delete('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/databases/TestDatabase')
             .reply(202);
   }
-}
+};
 
-function setupDestroyLastDatabasesMock(hockInstance, provider) {
+setupDestroyLastDatabasesMock = function (hockInstance, provider) {
  if (provider === 'rackspace') {
     hockInstance
       .get('/v1.0/123456/instances')
@@ -501,4 +504,4 @@ function setupDestroyLastDatabasesMock(hockInstance, provider) {
             .delete('/v1.0/5ACED3DC3AA740ABAA41711243CC6949/instances/51a28a3e-2b7b-4b5a-a1ba-99b871af2c8f/databases/TestDatabaseTwo')
             .reply(202);
   }
-}
+};
